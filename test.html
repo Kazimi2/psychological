@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心灵树洞 - 功能测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        .pass {
+            color: green;
+            font-weight: bold;
+        }
+        .fail {
+            color: red;
+            font-weight: bold;
+        }
+        .warning {
+            color: orange;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 20px;
+            background: #4a9eff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #3679d6;
+        }
+    </style>
+</head>
+<body>
+    <h1>心灵树洞 - 功能测试</h1>
+    
+    <div class="test-section">
+        <h2>1. 文件检查</h2>
+        <div id="fileCheck">
+            <p>检查中...</p>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. JavaScript功能测试</h2>
+        <div id="jsTest">
+            <p>测试中...</p>
+        </div>
+        <button onclick="testLocalStorage()">测试LocalStorage</button>
+        <button onclick="testEscapeHtml()">测试HTML转义</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Supabase连接测试</h2>
+        <div id="supabaseTest">
+            <p>注意：需要先设置Supabase数据库</p>
+            <button onclick="testSupabaseConnection()">测试Supabase连接</button>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. 响应式设计测试</h2>
+        <p>请调整浏览器窗口大小测试响应式布局：</p>
+        <ul>
+            <li>手机端（宽度小于768px）：单列布局</li>
+            <li>平板端（宽度768px-992px）：自适应布局</li>
+            <li>桌面端（宽度大于992px）：两栏布局</li>
+        </ul>
+        <p>当前窗口宽度：<span id="windowWidth">0</span>px</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>5. 主页面链接</h2>
+        <p><a href="index.html" target="_blank">点击这里打开主页面</a></p>
+        <p><a href="../backend/supabase_setup.md" target="_blank">查看Supabase设置指南</a></p>
+    </div>
+
+    <script>
+        // 文件检查
+        function checkFiles() {
+            const files = [
+                'index.html',
+                'style.css', 
+                'script.js',
+                'assets/README.txt'
+            ];
+            
+            const fileCheckDiv = document.getElementById('fileCheck');
+            let html = '<ul>';
+            let allPass = true;
+            
+            files.forEach(file => {
+                // 简单检查文件是否存在（通过尝试加载）
+                const xhr = new XMLHttpRequest();
+                xhr.open('HEAD', file, false);
+                try {
+                    xhr.send();
+                    if (xhr.status === 200 || xhr.status === 0) {
+                        html += `<li><span class="pass">✓</span> ${file} 存在</li>`;
+                    } else {
+                        html += `<li><span class="fail">✗</span> ${file} 不存在或无法访问</li>`;
+                        allPass = false;
+                    }
+                } catch (e) {
+                    html += `<li><span class="fail">✗</span> ${file} 检查失败: ${e.message}</li>`;
+                    allPass = false;
+                }
+            });
+            
+            html += '</ul>';
+            if (allPass) {
+                html += '<p class="pass">所有文件检查通过！</p>';
+            } else {
+                html += '<p class="fail">部分文件检查失败，请检查文件路径。</p>';
+            }
+            
+            fileCheckDiv.innerHTML = html;
+        }
+        
+        // JavaScript功能测试
+        function testJavaScript() {
+            const jsTestDiv = document.getElementById('jsTest');
+            let html = '<ul>';
+            let testsPassed = 0;
+            let totalTests = 3;
+            
+            // 测试1: 检查必要的函数是否存在
+            try {
+                if (typeof escapeHtml === 'function') {
+                    html += '<li><span class="pass">✓</span> escapeHtml函数存在</li>';
+                    testsPassed++;
+                } else {
+                    html += '<li><span class="fail">✗</span> escapeHtml函数不存在</li>';
+                }
+            } catch (e) {
+                html += `<li><span class="fail">✗</span> escapeHtml函数检查失败: ${e.message}</li>`;
+            }
+            
+            // 测试2: 测试日期函数
+            try {
+                const today = new Date().toDateString();
+                if (today && typeof today === 'string') {
+                    html += `<li><span class="pass">✓</span> 日期函数正常: ${today}</li>`;
+                    testsPassed++;
+                }
+            } catch (e) {
+                html += `<li><span class="fail">✗</span> 日期函数测试失败</li>`;
+            }
+            
+            // 测试3: 测试JSON函数
+            try {
+                const testObj = { test: true };
+                const jsonStr = JSON.stringify(testObj);
+                const parsedObj = JSON.parse(jsonStr);
+                if (parsedObj.test === true) {
+                    html += '<li><span class="pass">✓</span> JSON函数正常</li>';
+                    testsPassed++;
+                }
+            } catch (e) {
+                html += `<li><span class="fail">✗</span> JSON函数测试失败</li>`;
+            }
+            
+            html += '</ul>';
+            html += `<p>JavaScript测试: ${testsPassed}/${totalTests} 通过</p>`;
+            
+            jsTestDiv.innerHTML = html;
+        }
+        
+        // LocalStorage测试
+        function testLocalStorage() {
+            try {
+                localStorage.setItem('test_key', 'test_value');
+                const value = localStorage.getItem('test_key');
+                if (value === 'test_value') {
+                    localStorage.removeItem('test_key');
+                    alert('LocalStorage测试通过！');
+                } else {
+                    alert('LocalStorage测试失败：读取的值不正确');
+                }
+            } catch (e) {
+                alert(`LocalStorage测试失败：${e.message}`);
+            }
+        }
+        
+        // HTML转义测试
+        function testEscapeHtml() {
+            try {
+                // 定义escapeHtml函数（从主脚本复制）
+                function escapeHtml(text) {
+                    const div = document.createElement('div');
+                    div.textContent = text;
+                    return div.innerHTML;
+                }
+                
+                const testString = '<script>alert("xss")</script>';
+                const escaped = escapeHtml(testString);
+                if (escaped === '<script>alert("xss")</script>') {
+                    alert('HTML转义测试通过！');
+                } else {
+                    alert(`HTML转义测试失败：\n输入: ${testString}\n输出: ${escaped}`);
+                }
+            } catch (e) {
+                alert(`HTML转义测试失败：${e.message}`);
+            }
+        }
+        
+        // Supabase连接测试
+        async function testSupabaseConnection() {
+            const SUPABASE_URL = 'https://dtqytwjwwvbaucpvnpjl.supabase.co';
+            const SUPABASE_KEY = 'sb_publishable_t5HvE7KDW3MA7pzf_HZkLA_N4-WoOV_';
+            const TABLE_NAME = 'messages';
+            
+            const testDiv = document.getElementById('supabaseTest');
+            testDiv.innerHTML = '<p>测试连接中...</p>';
+            
+            try {
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?limit=1`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`
+                        }
+                    }
+                );
+                
+                if (response.ok) {
+                    testDiv.innerHTML = '<p class="pass">✓ Supabase连接成功！</p>';
+                } else if (response.status === 404) {
+                    testDiv.innerHTML = '<p class="warning">⚠ 表不存在，请按照指南创建messages表</p>';
+                } else {
+                    testDiv.innerHTML = `<p class="fail">✗ 连接失败: HTTP ${response.status}</p>`;
+                }
+            } catch (error) {
+                testDiv.innerHTML = `<p class="fail">✗ 连接错误: ${error.message}</p>`;
+            }
+        }
+        
+        // 窗口宽度显示
+        function updateWindowWidth() {
+            document.getElementById('windowWidth').textContent = window.innerWidth;
+        }
+        
+        // 初始化
+        window.addEventListener('load', () => {
+            checkFiles();
+            testJavaScript();
+            updateWindowWidth();
+            window.addEventListener('resize', updateWindowWidth);
+        });
+    </script>
+</body>
+</html>

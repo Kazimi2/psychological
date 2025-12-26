@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心灵树洞 - 治愈你的每一天</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-tree"></i>
+                <h1>心灵树洞</h1>
+            </div>
+            <p class="tagline">在这里，你可以匿名分享心情，倾听他人的故事，找到心灵的慰藉</p>
+        </header>
+
+        <!-- 主要内容区 -->
+        <main class="main-content">
+            <!-- 留言表单 -->
+            <section class="message-form-section">
+                <div class="form-container">
+                    <h2><i class="fas fa-feather-alt"></i> 分享你的心情</h2>
+                    <p class="form-description">每天每台设备可以留言2次，你的留言会被随机展示给其他人</p>
+                    
+                    <form id="messageForm">
+                        <div class="form-group">
+                            <label for="nickname"><i class="fas fa-user"></i> 昵称（可选）</label>
+                            <input type="text" id="nickname" placeholder="匿名" maxlength="20">
+                            <div class="hint">如果不填，将显示为"匿名"</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="content"><i class="fas fa-comment-dots"></i> 留言内容 *</label>
+                            <textarea id="content" placeholder="写下你的心情、烦恼或希望..." rows="4" required maxlength="500"></textarea>
+                            <div class="char-count"><span id="charCount">0</span>/500</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="mood"><i class="fas fa-heart"></i> 当前心情</label>
+                            <select id="mood">
+                                <option value="平静">😌 平静</option>
+                                <option value="开心">😊 开心</option>
+                                <option value="希望">✨ 希望</option>
+                                <option value="难过">😔 难过</option>
+                                <option value="焦虑">😰 焦虑</option>
+                                <option value="愤怒">😠 愤怒</option>
+                                <option value="感恩">🙏 感恩</option>
+                                <option value="困惑">🤔 困惑</option>
+                                <option value="其他">🌱 其他</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-footer">
+                            <div class="quota-info">
+                                <i class="fas fa-info-circle"></i>
+                                <span>今日剩余留言次数: <span id="remainingCount">2</span>/2</span>
+                            </div>
+                            <button type="submit" id="submitBtn" class="submit-btn">
+                                <i class="fas fa-paper-plane"></i> 发布留言
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div id="formMessage" class="form-message"></div>
+                </div>
+            </section>
+
+            <!-- 留言展示区 -->
+            <section class="messages-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-leaf"></i> 树洞里的悄悄话</h2>
+                    <button id="refreshBtn" class="refresh-btn">
+                        <i class="fas fa-sync-alt"></i> 刷新留言
+                    </button>
+                </div>
+                
+                <p class="section-description">每次刷新会随机显示10条不同的留言，听听别人的故事</p>
+                
+                <div id="messagesContainer" class="messages-container">
+                    <div class="loading-message">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>正在加载树洞里的悄悄话...</p>
+                    </div>
+                </div>
+                
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <i class="fas fa-inbox"></i>
+                    <h3>树洞还是空的</h3>
+                    <p>成为第一个分享心情的人吧！</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h3><i class="fas fa-tree"></i> 心灵树洞</h3>
+                    <p>一个治愈心灵的匿名分享空间</p>
+                    <p>每天每台设备限留言2次，珍惜每一次表达</p>
+                </div>
+                <div class="footer-links">
+                    <p><i class="fas fa-shield-alt"></i> 匿名安全：我们不会收集您的个人信息</p>
+                    <p><i class="fas fa-heart"></i> 友善社区：请保持尊重与善意</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2023 心灵树洞 | 治愈你的每一天</p>
+                <p class="tech-note">Powered by Supabase</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 成功提示模态框 -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>留言已放入树洞</h3>
+            <p>你的心情已被树洞聆听，可能会在某个时刻温暖他人</p>
+            <button id="closeModalBtn" class="modal-btn">继续分享</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
